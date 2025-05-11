@@ -3,382 +3,512 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DiscordCraft | Professional Discord Server Design</title>
+    <title>Discord Designs - Premium Server Design Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         :root {
             --primary: #5865F2;
-            --secondary: #404EED;
+            --primary-dark: #4752C4;
+            --secondary: #2C2F33;
             --dark: #23272A;
             --light: #FFFFFF;
-            --accent: #57F287;
+            --success: #3BA55C;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
-        
+
         body {
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: var(--secondary);
         }
-        
+
         header {
-            background-color: var(--primary);
+            background-color: var(--dark);
             color: var(--light);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        nav {
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
+            color: var(--light);
+            text-decoration: none;
         }
-        
-        .nav-links {
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        nav ul {
             display: flex;
             list-style: none;
         }
-        
-        .nav-links li {
-            margin-left: 2rem;
+
+        nav ul li {
+            margin-left: 1.5rem;
         }
-        
-        .nav-links a {
+
+        nav ul li a {
             color: var(--light);
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: color 0.3s;
         }
-        
-        .nav-links a:hover {
-            color: var(--accent);
+
+        nav ul li a:hover {
+            color: var(--primary);
         }
-        
+
+        .hero {
+            background: linear-gradient(135deg, var(--dark), var(--secondary));
+            color: var(--light);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+
         .btn {
             display: inline-block;
-            background-color: var(--accent);
-            color: var(--dark);
-            padding: 0.7rem 1.5rem;
+            background-color: var(--primary);
+            color: var(--light);
+            padding: 0.8rem 1.5rem;
             border-radius: 4px;
             text-decoration: none;
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
-        
+
         .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background-color: var(--primary-dark);
         }
-        
-        .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(88, 101, 242, 0.9), rgba(64, 78, 237, 0.9)), url('https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2232&auto=format&fit=crop') no-repeat center center/cover;
-            display: flex;
-            align-items: center;
-            text-align: center;
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            margin-left: 1rem;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
             color: var(--light);
-            padding-top: 80px;
         }
-        
-        .hero-content {
-            max-width: 800px;
+
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 2rem;
         }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
-        
-        section {
-            padding: 5rem 0;
-        }
-        
+
         .section-title {
             text-align: center;
             margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--secondary);
         }
-        
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--primary);
-        }
-        
+
         .services {
-            background-color: #f9f9f9;
-        }
-        
-        .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
+            margin-bottom: 4rem;
         }
-        
+
         .service-card {
             background-color: var(--light);
             border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        
+
         .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
-        
-        .service-card h3 {
+
+        .service-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .service-content {
+            padding: 1.5rem;
+        }
+
+        .service-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .service-content .price {
+            font-size: 1.8rem;
+            font-weight: 700;
             color: var(--primary);
             margin-bottom: 1rem;
         }
-        
-        .service-card .price {
-            font-weight: 700;
-            color: var(--accent);
-            font-size: 1.5rem;
-            margin: 1rem 0;
+
+        .service-content ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
         }
-        
+
+        .service-content ul li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .service-content ul li:before {
+            content: "✓";
+            color: var(--success);
+            position: absolute;
+            left: 0;
+        }
+
+        .portfolio {
+            background-color: var(--secondary);
+            color: var(--light);
+            padding: 4rem 2rem;
+        }
+
+        .portfolio .section-title {
+            color: var(--light);
+        }
+
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
-        
+
         .portfolio-item {
             position: relative;
             border-radius: 8px;
             overflow: hidden;
             height: 250px;
         }
-        
+
         .portfolio-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: all 0.5s ease;
+            transition: transform 0.5s;
         }
-        
+
         .portfolio-item:hover img {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
-        
+
         .portfolio-overlay {
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(88, 101, 242, 0.8);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            padding: 1.5rem;
+            color: var(--light);
             opacity: 0;
-            transition: all 0.3s ease;
-            color: white;
+            transition: opacity 0.3s;
         }
-        
+
         .portfolio-item:hover .portfolio-overlay {
             opacity: 1;
         }
-        
+
         .testimonials {
-            background-color: #f9f9f9;
+            padding: 4rem 2rem;
         }
-        
+
         .testimonial-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
         }
-        
+
         .testimonial-card {
             background-color: var(--light);
-            border-radius: 8px;
             padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         .testimonial-card .quote {
             font-style: italic;
             margin-bottom: 1rem;
         }
-        
-        .testimonial-card .client {
-            font-weight: 700;
-            color: var(--primary);
+
+        .testimonial-card .author {
+            display: flex;
+            align-items: center;
         }
-        
-        form {
+
+        .testimonial-card .author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+
+        .author-info h4 {
+            margin-bottom: 0.2rem;
+        }
+
+        .author-info p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .contact {
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 4rem 2rem;
+        }
+
+        .contact .section-title {
+            color: var(--light);
+        }
+
+        .contact-form {
             max-width: 600px;
             margin: 0 auto;
-            background-color: #f9f9f9;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-        
+
         .form-group {
             margin-bottom: 1.5rem;
         }
-        
-        label {
+
+        .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            font-weight: 600;
+            font-weight: 500;
         }
-        
-        input, textarea, select {
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 0.8rem;
-            border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 1rem;
-        }
-        
-        textarea {
-            height: 150px;
-        }
-        
-        footer {
-            background-color: var(--dark);
+            border: none;
+            background-color: rgba(255, 255, 255, 0.1);
             color: var(--light);
-            padding: 3rem 0;
-            text-align: center;
         }
-        
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        footer {
+            background-color: var(--secondary);
+            color: var(--light);
+            text-align: center;
+            padding: 2rem;
+        }
+
         .footer-links {
             display: flex;
             justify-content: center;
-            list-style: none;
-            margin: 1.5rem 0;
+            margin-bottom: 1rem;
         }
-        
-        .footer-links li {
-            margin: 0 1rem;
-        }
-        
+
         .footer-links a {
             color: var(--light);
+            margin: 0 1rem;
             text-decoration: none;
         }
-        
+
         .footer-links a:hover {
-            color: var(--accent);
+            text-decoration: underline;
         }
-        
+
         .social-links {
-            margin: 1.5rem 0;
+            margin-bottom: 1rem;
         }
-        
+
         .social-links a {
             color: var(--light);
             margin: 0 0.5rem;
             font-size: 1.5rem;
         }
-        
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--light);
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        #payment-form {
+            margin-top: 1.5rem;
+        }
+
+        #card-element {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+            header {
+                flex-direction: column;
+                padding: 1rem;
             }
-            
+
+            nav ul {
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .btn-outline {
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <nav>
-                <div class="logo">DiscordCraft</div>
-                <ul class="nav-links">
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#portfolio">Portfolio</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
-                    <li><a href="#contact" class="btn">Get Started</a></li>
-                </ul>
-            </nav>
-        </div>
+        <a href="#" class="logo">Discord<span>Designs</span></a>
+        <nav>
+            <ul>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
     </header>
 
     <section class="hero">
-        <div class="hero-content">
-            <h1>Premium Discord Server Design</h1>
-            <p>We create stunning, functional Discord servers tailored to your community's needs. Perfect for gamers, streamers, businesses, and creators.</p>
-            <a href="#contact" class="btn">Get Your Custom Server</a>
-        </div>
+        <h1>Premium Discord Server Designs</h1>
+        <p>We create stunning, functional Discord servers with custom roles, channels, bots, and aesthetics tailored to your community's needs.</p>
+        <a href="#services" class="btn">View Packages</a>
+        <a href="#contact" class="btn btn-outline">Get a Quote</a>
     </section>
 
-    <section id="services" class="services">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Services</h2>
-                <p>Everything you need for a perfect Discord community</p>
+    <section id="services" class="container">
+        <h2 class="section-title">Our Services</h2>
+        <div class="services">
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1634157703702-3c124b455499?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Basic Package">
+                <div class="service-content">
+                    <h3>Basic Setup</h3>
+                    <div class="price">$49.99</div>
+                    <ul>
+                        <li>Custom server structure</li>
+                        <li>Basic role setup</li>
+                        <li>10 custom channels</li>
+                        <li>Basic bot configuration</li>
+                        <li>Simple welcome screen</li>
+                    </ul>
+                    <button class="btn purchase-btn" data-plan="basic">Purchase Now</button>
+                </div>
             </div>
-            <div class="services-grid">
-                <div class="service-card">
-                    <h3>Basic Server Setup</h3>
-                    <p>Perfect for those just starting out. We'll create a clean, organized server structure with all essential channels and roles.</p>
-                    <div class="price">$29</div>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Standard Package">
+                <div class="service-content">
+                    <h3>Standard Design</h3>
+                    <div class="price">$99.99</div>
                     <ul>
-                        <li>Channel structure setup</li>
-                        <li>Basic role configuration</li>
-                        <li>Welcome message</li>
-                        <li>1 basic bot</li>
+                        <li>Everything in Basic</li>
+                        <li>Custom emojis & icons</li>
+                        <li>20 custom channels</li>
+                        <li>Advanced bot setup</li>
+                        <li>Custom welcome screen</li>
+                        <li>Server branding</li>
                     </ul>
+                    <button class="btn purchase-btn" data-plan="standard">Purchase Now</button>
                 </div>
-                <div class="service-card">
-                    <h3>Premium Server Design</h3>
-                    <p>Our most popular package with custom branding and advanced features for growing communities.</p>
-                    <div class="price">$99</div>
+            </div>
+            <div class="service-card">
+                <img src="https://images.unsplash.com/photo-1635003913019-9592b6adb1e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Premium Package">
+                <div class="service-content">
+                    <h3>Premium Package</h3>
+                    <div class="price">$199.99</div>
                     <ul>
-                        <li>Custom server branding</li>
-                        <li>Advanced channel setup</li>
-                        <li>3 premium bots</li>
-                        <li>Custom emojis (5)</li>
-                        <li>Verification system</li>
+                        <li>Everything in Standard</li>
+                        <li>Complete server branding</li>
+                        <li>Unlimited channels</li>
+                        <li>Advanced bot customization</li>
+                        <li>Custom graphics & banners</li>
+                        <li>VIP support</li>
+                        <li>1 month of maintenance</li>
                     </ul>
-                </div>
-                <div class="service-card">
-                    <h3>Enterprise Solution</h3>
-                    <p>Complete server design and management for businesses and large communities.</p>
-                    <div class="price">$249+</div>
-                    <ul>
-                        <li>Fully customized server</li>
-                        <li>Custom bot development</li>
-                        <li>Unlimited custom emojis</li>
-                        <li>Advanced security</li>
-                        <li>1 month support</li>
-                    </ul>
+                    <button class="btn purchase-btn" data-plan="premium">Purchase Now</button>
                 </div>
             </div>
         </div>
@@ -386,30 +516,27 @@
 
     <section id="portfolio" class="portfolio">
         <div class="container">
-            <div class="section-title">
-                <h2>Our Portfolio</h2>
-                <p>See examples of our work</p>
-            </div>
+            <h2 class="section-title">Our Portfolio</h2>
             <div class="portfolio-grid">
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1639762681057-408e52192e55?q=80&w=2232&auto=format&fit=crop" alt="Gaming Community Server">
+                    <img src="https://images.unsplash.com/photo-1634142772065-7a4db445cd5c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Gaming Community">
                     <div class="portfolio-overlay">
                         <h3>Gaming Community</h3>
-                        <p>Esports organization server</p>
+                        <p>Custom setup for a 10,000+ member gaming community</p>
                     </div>
                 </div>
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1627399270231-7d36245355a9?q=80&w=2574&auto=format&fit=crop" alt="Streamer Server">
+                    <img src="https://images.unsplash.com/photo-1635003913011-95971fd6ce38?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="NFT Project">
                     <div class="portfolio-overlay">
-                        <h3>Twitch Streamer</h3>
-                        <p>50k follower content creator</p>
+                        <h3>NFT Project</h3>
+                        <p>Branded server for an NFT collection launch</p>
                     </div>
                 </div>
                 <div class="portfolio-item">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2940&auto=format&fit=crop" alt="Business Server">
+                    <img src="https://images.unsplash.com/photo-1635003913028-8d9ccbb1a6a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Education Server">
                     <div class="portfolio-overlay">
-                        <h3>Tech Startup</h3>
-                        <p>Company communication hub</p>
+                        <h3>Education Server</h3>
+                        <p>Organized server for an online course community</p>
                     </div>
                 </div>
             </div>
@@ -418,22 +545,37 @@
 
     <section id="testimonials" class="testimonials">
         <div class="container">
-            <div class="section-title">
-                <h2>What Our Clients Say</h2>
-                <p>Don't just take our word for it</p>
-            </div>
+            <h2 class="section-title">What Our Clients Say</h2>
             <div class="testimonial-grid">
                 <div class="testimonial-card">
-                    <p class="quote">"DiscordCraft transformed our gaming community's server. Engagement went up 300% after their redesign!"</p>
-                    <p class="client">- Alex, Esports Team Owner</p>
+                    <p class="quote">"DiscordDesigns transformed our community server into a professional space that our members love. The attention to detail was incredible!"</p>
+                    <div class="author">
+                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah J.">
+                        <div class="author-info">
+                            <h4>Sarah J.</h4>
+                            <p>Gaming Community Owner</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="testimonial-card">
-                    <p class="quote">"As a streamer, having a professional Discord made all the difference. Worth every penny."</p>
-                    <p class="client">- Sarah, Twitch Partner</p>
+                    <p class="quote">"The premium package was worth every penny. Our server now has a cohesive brand that matches our website and social media."</p>
+                    <div class="author">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael T.">
+                        <div class="author-info">
+                            <h4>Michael T.</h4>
+                            <p>NFT Project Manager</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="testimonial-card">
-                    <p class="quote">"Our company switched to Discord for remote work, and DiscordCraft made the transition seamless."</p>
-                    <p class="client">- Michael, Tech Startup CEO</p>
+                    <p class="quote">"Working with DiscordDesigns was seamless. They understood our needs and delivered beyond our expectations."</p>
+                    <div class="author">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Emma R.">
+                        <div class="author-info">
+                            <h4>Emma R.</h4>
+                            <p>Online Educator</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -441,91 +583,233 @@
 
     <section id="contact" class="contact">
         <div class="container">
-            <div class="section-title">
-                <h2>Get Started</h2>
-                <p>Ready to elevate your Discord server?</p>
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-form">
+                <form id="quote-form">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="discord">Discord Username</label>
+                        <input type="text" id="discord" name="discord" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Service Interested In</label>
+                        <select id="service" name="service">
+                            <option value="basic">Basic Setup ($49.99)</option>
+                            <option value="standard">Standard Design ($99.99)</option>
+                            <option value="premium">Premium Package ($199.99)</option>
+                            <option value="custom">Custom Solution</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Tell Us About Your Project</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Request Quote</button>
+                </form>
             </div>
-            <form id="contact-form">
-                <div class="form-group">
-                    <label for="name">Your Name</label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="service">Service Interested In</label>
-                    <select id="service" name="service">
-                        <option value="basic">Basic Server Setup ($29)</option>
-                        <option value="premium">Premium Server Design ($99)</option>
-                        <option value="enterprise">Enterprise Solution ($249+)</option>
-                        <option value="custom">Custom Project</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="message">Tell Us About Your Project</label>
-                    <textarea id="message" name="message" required></textarea>
-                </div>
-                <button type="submit" class="btn">Submit Request</button>
-            </form>
         </div>
     </section>
 
     <footer>
-        <div class="container">
-            <div class="logo">DiscordCraft</div>
-            <p>Professional Discord Server Design Services</p>
-            <ul class="footer-links">
-                <li><a href="#services">Services</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-discord"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-            </div>
-            <p>&copy; 2023 DiscordCraft. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="#services">Services</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="#contact">Contact</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
         </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-discord"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>&copy; 2023 DiscordDesigns. All rights reserved.</p>
     </footer>
 
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Complete Your Purchase</h2>
+            <p id="selected-plan">Premium Package - $199.99</p>
+            
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="email-payment">Email</label>
+                    <input type="email" id="email-payment" required>
+                </div>
+                <div class="form-group">
+                    <label for="discord-payment">Discord Username</label>
+                    <input type="text" id="discord-payment" required>
+                </div>
+                <div class="form-group">
+                    <label>Card Details</label>
+                    <div id="card-element"></div>
+                </div>
+                <button type="submit" class="btn" id="submit-payment">Pay Now</button>
+                <div id="payment-errors" role="alert" style="color: #fa755a; margin-top: 1rem;"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
     <script>
-        // Smooth scrolling for anchor links
+        // Simple smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
             });
         });
+
+        // Modal functionality
+        const modal = document.getElementById('payment-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const purchaseButtons = document.querySelectorAll('.purchase-btn');
+        const selectedPlanText = document.getElementById('selected-plan');
         
-        // Form submission handling
-        const contactForm = document.getElementById('contact-form');
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form values
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const service = document.getElementById('service').value;
-            const message = document.getElementById('message').value;
-            
-            // Here you would typically send this data to your server
-            // For now, we'll just show an alert
-            alert(`Thanks for your request, ${name}! We'll contact you soon about your ${service} project.`);
-            
-            // Reset form
-            contactForm.reset();
+        // Plan prices for reference
+        const planPrices = {
+            basic: 4999, // in cents
+            standard: 9999,
+            premium: 19999
+        };
+        
+        // Plan names for display
+        const planNames = {
+            basic: 'Basic Setup - $49.99',
+            standard: 'Standard Design - $99.99',
+            premium: 'Premium Package - $199.99'
+        };
+        
+        let selectedPlan = '';
+        
+        purchaseButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                selectedPlan = button.getAttribute('data-plan');
+                selectedPlanText.textContent = planNames[selectedPlan];
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
         });
         
-        // You would add more JavaScript here for actual functionality
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Stripe Payment Integration
+        const stripe = Stripe('pk_test_your_stripe_publishable_key'); // Replace with your actual key
+        
+        const elements = stripe.elements();
+        const cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+        
+        const paymentForm = document.getElementById('payment-form');
+        const paymentError = document.getElementById('payment-errors');
+        
+        paymentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitButton = document.getElementById('submit-payment');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
+            
+            const email = document.getElementById('email-payment').value;
+            const discordUsername = document.getElementById('discord-payment').value;
+            
+            try {
+                // In a real app, you would create a payment intent on your server
+                // Here's a mock implementation for demonstration
+                
+                // Create a payment intent (in a real app, this would be a fetch to your backend)
+                const response = await fetch('/create-payment-intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: planPrices[selectedPlan],
+                        currency: 'usd',
+                        metadata: {
+                            plan: selectedPlan,
+                            email: email,
+                            discord: discordUsername
+                        }
+                    }),
+                });
+                
+                // Mock response since we don't have a backend in this example
+                // In a real app, you would use the actual response from your server
+                const { clientSecret } = await response.json();
+                
+                // Confirm the payment with Stripe
+                const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            email: email,
+                        },
+                    }
+                });
+                
+                if (error) {
+                    paymentError.textContent = error.message;
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Pay Now';
+                } else {
+                    // Payment succeeded
+                    paymentError.textContent = '';
+                    alert(`Payment successful! Payment ID: ${paymentIntent.id}`);
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    
+                    // Reset form
+                    paymentForm.reset();
+                    cardElement.clear();
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Pay Now';
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                paymentError.textContent = 'An error occurred. Please try again.';
+                submitButton.disabled = false;
+                submitButton.textContent = 'Pay Now';
+            }
+        });
+        
+        // Quote form submission
+        const quoteForm = document.getElementById('quote-form');
+        quoteForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(quoteForm);
+            const data = Object.fromEntries(formData);
+            
+            // In a real app, you would send this to your backend
+            console.log('Quote request:', data);
+            alert('Thank you for your request! We will contact you soon.');
+            quoteForm.reset();
+        });
     </script>
-    
-    <!-- Font Awesome for icons (you'd need to actually include it in a real site) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>
